@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+
+void print_file_info(const char *filename) {
+    struct stat file_stat;
+    
+    if (stat(filename, &file_stat) == -1) {
+        perror("stat");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("File Information for %s:\n", filename);
+    printf("Size: %ld bytes\n", file_stat.st_size);
+    printf("Mode: %o\n", file_stat.st_mode);
+    printf("UID: %u\n", file_stat.st_uid);
+    printf("GID: %u\n", file_stat.st_gid);
+}
+
+void list_files(const char *dirname) {
+    DIR *dir;
+    struct dirent *entry;
+
+    if ((dir = opendir(dirname)) == NULL) {
+        perror("opendir");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("Files in directory %s:\n", dirname);
+
+    while ((entry = readdir(dir)) != NULL) {
+        printf("%s\n", entry->d_name);
+    }
+
+    closedir(dir);
+}
+
+int main() {
+    char filename[100];
+    char dirname[100];
+    int file_descriptor;
+    off_t offset;
+
+    printf("Enter the filename: ");
+    scanf("%s", filename);
+
+    // Open file using fcntl
+    if ((file_descriptor = open(filename, O_RDWR)) == -1) {
+        perror("open");
+        exit(EXIT_FAILURE);
+    }
+
+    // Get current offset using lseek
+    offset = lseek(file_descriptor, 0, SEEK_CUR);
+    printf("Current offset: %ld\n", offset);
+
+    // Seek to the beginning of the file
+    lseek(file_descriptor, 0, SEEK_SET);
+
+    // Print file information using stat
+    print_file_info(filename);
+    close(file_descriptor);
+    printf("\nEnter the directory name: ");
+    scanf("%s", dirname);
+    list_files(dirname);
+
+    return 0;
+}

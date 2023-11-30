@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+int main() {
+    int fd, choice;
+    char buffer[100], filename[100];
+    printf("Enter the name of the file you want to open: ");
+    scanf("%s", filename);
+
+    // open the file
+    fd = open(filename, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        printf("Error opening the file!\n");
+        exit(1);
+    }
+
+    while (1) {
+        printf("\nChoose operation:\n");
+        printf("1. Read from file\n");
+        printf("2. Write to file\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+        case 1: // read from file
+            lseek(fd, 0, SEEK_SET); // reposition to beginning of file
+            read(fd, buffer, sizeof(buffer));
+            printf("Content of the file is: %s\n", buffer);
+            break;
+
+        case 2: // write to file
+            printf("Enter content to write: ");
+            scanf("%s", buffer);
+            write(fd, buffer, strlen(buffer));
+            break;
+
+        case 3: // exit
+            close(fd);
+            exit(0);
+            break;
+
+        default:
+            printf("Invalid choice!\n");
+            break;
+        }
+    }
+
+    return 0;
+}
