@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <dirent.h>
+
+void list_directory(const char *path) {
+    DIR *dir;
+    struct dirent *entry;
+
+    dir = opendir(path);
+    if (dir == NULL) {
+        perror("opendir");
+        return;
+    }
+
+    while ((entry = readdir(dir)) != NULL) {
+        printf("%s\n", entry->d_name);
+    }
+
+    closedir(dir);
+}
+
+int main() {
+    char path[1024];
+
+    printf("Enter the directory: ");
+    fgets(path, sizeof(path), stdin);
+    path[strcspn(path, "\n")] = '\0';
+
+    list_directory(path);
+
+    return 0;
+}

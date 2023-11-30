@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int calculateHeadMovement(int startTrack, int endTrack, int currentTrack) {
+    if (startTrack <= endTrack) {
+        return (currentTrack - startTrack) + (endTrack - currentTrack);
+    } else {
+        return (currentTrack - startTrack) + (startTrack - endTrack) + (endTrack - currentTrack);
+    }
+}
+
+int main() {
+    int numberOfTracks, currentTrack, readWriteCount, startTrack, endTrack, totalHeadMovement = 0;
+    printf("Enter the total number of disk blocks: ");
+    scanf("%d", &numberOfTracks);
+    printf("Enter the block number that the disk head is currently at: ");
+    scanf("%d", &currentTrack);
+    printf("Enter the total number of read/write requests: ");
+    scanf("%d", &readWriteCount);
+
+    int readWriteRequests[readWriteCount];
+    printf("Enter the block numbers for the read/write requests: ");
+    for (int i = 0; i < readWriteCount; i++) {
+        scanf("%d", &readWriteRequests[i]);
+    }
+
+    startTrack = currentTrack;
+    endTrack = currentTrack;
+
+    for (int i = 0; i < readWriteCount; i++) {
+        if (readWriteRequests[i] < startTrack) {
+            startTrack = readWriteRequests[i];
+        }
+        if (readWriteRequests[i] > endTrack) {
+            endTrack = readWriteRequests[i];
+        }
+    }
+
+    totalHeadMovement += calculateHeadMovement(startTrack, endTrack, currentTrack);
+    currentTrack = endTrack;
+
+    printf("Total Head Movement: %d\n", totalHeadMovement);
+    printf("Sequence of disk block requests: ");
+    for (int i = 0; i < readWriteCount; i++) {
+        printf("%d ", readWriteRequests[i]);
+    }
+    printf("\n");
+
+    return 0;
+}

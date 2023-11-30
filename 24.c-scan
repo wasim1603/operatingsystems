@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int cscan(int start, int end, int up) {
+    int count = 0, current_track;
+    if (up) {
+        for (current_track = start; current_track <= end; current_track++) {
+            printf("%d ", current_track);
+            count++;
+        }
+        for (current_track = end - 1; current_track >= start; current_track--) {
+            printf("%d ", current_track);
+            count++;
+        }
+    } else {
+        for (current_track = start; current_track >= end; current_track--) {
+            printf("%d ", current_track);
+            count++;
+        }
+        for (current_track = end + 1; current_track <= start; current_track++) {
+            printf("%d ", current_track);
+            count++;
+        }
+    }
+    return count;
+}
+
+int main() {
+    int n, start, end, i, j, count, temp, up;
+    printf("Enter the number of tracks: ");
+    scanf("%d", &n);
+    printf("Enter the start track number: ");
+    scanf("%d", &start);
+    printf("Enter the direction 0 (down) / 1 (up): ");
+    scanf("%d", &up);
+    printf("Enter the end track number: ");
+    scanf("%d", &end);
+    int array[n];
+    printf("Enter the requested tracks: ");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &array[i]);
+    }
+    count = cscan(start, end, up);
+    printf("\nTotal number of seek operations = %d\n", count);
+    return 0;
+}

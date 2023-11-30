@@ -1,0 +1,33 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+void *threadFunction(void *arg) {
+    printf("Hello from thread.\n");
+    return NULL;
+}
+
+int main() {
+    pthread_t thread;
+
+    printf("Enter any key to create and start the thread.\n");
+    getchar();
+
+    int result = pthread_create(&thread, NULL, threadFunction, NULL);
+    if (result != 0) {
+        printf("Failed to create thread.\n");
+        return 1;
+    }
+
+    printf("Enter any key to join the thread.\n");
+    getchar();
+
+    result = pthread_join(thread, NULL);
+    if (result != 0) {
+        printf("Failed to join thread.\n");
+        return 1;
+    }
+
+    printf("Thread joined.\n");
+    return 0;
+}

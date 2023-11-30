@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <string.h>
+
+void grep(char *filename, char *pattern) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Error: Unable to open file %s\n", filename);
+        return;
+    }
+
+    char line[1024];
+    int lineNumber = 0;
+    while (fgets(line, sizeof(line), file)) {
+        lineNumber++;
+        if (strstr(line, pattern) != NULL) {
+            printf("%s:%d:%s", filename, lineNumber, line);
+        }
+    }
+
+    fclose(file);
+}
+
+int main() {
+    char filename[1024];
+    char pattern[1024];
+
+    printf("Enter the filename: ");
+    scanf("%s", filename);
+
+    printf("Enter the pattern: ");
+    scanf("%s", pattern);
+
+    grep(filename, pattern);
+
+    return 0;
+}
